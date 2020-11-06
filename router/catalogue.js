@@ -1,9 +1,12 @@
 const express = require('express')
 
+const os = require('os')
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 
+
+const spliter=os.platform()==='linux'?'/':'\\'
 function readFileList(dir, tree=[]) {
     const files = fs.readdirSync(dir);
     // console.log(files);
@@ -12,7 +15,7 @@ function readFileList(dir, tree=[]) {
         var fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
         node.key=fullPath
-        node.title=fullPath.split('\\').slice(-1)[0]
+        node.title=fullPath.split(spliter).slice(-1)[0]
         if (stat.isDirectory()) {
             // dirsList.push(fullPath)
             // readFileList(path.join(dir, item), filesList);  //递归读取文件
@@ -31,6 +34,7 @@ readFileList(path.join(__dirname, '../mdDocs'),tree);
 
 const router = express.Router()
 router.get('/',(req,res,next)=>{
+  console.log(os.platform())
   res.json({
     code:200,
     tree
