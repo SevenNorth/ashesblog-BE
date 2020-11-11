@@ -14,13 +14,16 @@ function readFileList(dir, tree=[]) {
         var node={}
         var fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        node.key=fullPath
-        node.title=fullPath.split(spliter).slice(-1)[0]
+        node.key = fullPath;
+        const title = fullPath.split(spliter).slice(-1)[0];
+        node.title = title;
         if (stat.isDirectory()) {
             // dirsList.push(fullPath)
             // readFileList(path.join(dir, item), filesList);  //递归读取文件
-            node.children = readFileList( path.join(dir, item))
-        } else {                
+            node.children = readFileList(path.join(dir, item));
+            if(!node.children.length) return;
+        } else {  
+          if(title.indexOf('md') == -1) return;              
             // filesList.push(fullPath);                  
         }        
         tree.push(node)
